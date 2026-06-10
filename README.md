@@ -34,7 +34,7 @@ CNN outperformed LSTM with more consistent and stable predictions across patient
 - **Environment:** Google Colab, Amarel Supercomputer
 
 ## Team
-Fuzail Ali, Pablo Moreno, Nancy Shehata, Zain Iqbal, Erick Cruz  
+Fuzail Ali(Project Manager), Pablo Moreno, Nancy Shehata, Zain Iqbal, Erick Cruz  
 Mentor: Dr. Daneault
 
 ## Future Goals
