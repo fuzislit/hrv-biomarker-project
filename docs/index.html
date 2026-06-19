@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRV Biomarker Discovery — Rutgers University</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080c10;
+    --bg2: #0e1420;
+    --bg3: #141c28;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8edf5;
+    --muted: #7a8a9e;
+    --accent: #3b9eff;
+    --accent2: #00d4aa;
+    --accent-dim: rgba(59,158,255,0.12);
+    --accent2-dim: rgba(0,212,170,0.1);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 56px;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  main { padding-top: 56px; }
+
+  section { padding: 5rem 0; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 7rem 0 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59,158,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: #fff;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 620px;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .meta-value {
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.65rem 1.4rem;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: #5aadff; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border2);
+  }
+
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Section headings */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+
+  .section-intro {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 680px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* Overview */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .overview-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+
+  .overview-card h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .overview-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 18px;
+  }
+
+  .icon-blue { background: var(--accent-dim); color: var(--accent); }
+  .icon-teal { background: var(--accent2-dim); color: var(--accent2); }
+
+  /* How it works */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: 40px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2));
+    opacity: 0.3;
+  }
+
+  .step {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1.5rem 0;
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-content h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0.4rem;
+    padding-top: 8px;
+  }
+
+  .step-content p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* Results */
+  .results-highlight {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .metric-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-card.winner {
+    border-color: rgba(59,158,255,0.3);
+  }
+
+  .metric-card.winner::before {
+    content: 'best performer';
+    position: absolute;
+    top: 12px; right: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .metric-model {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .metric-val {
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .metric-val.good { color: var(--accent2); }
+  .metric-val.bad { color: var(--muted); }
+
+  .metric-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .metric-mae {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .metric-mae span { color: var(--text); font-weight: 500; }
+
+  .result-note {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    padding: 1rem 1.25rem;
+    background: var(--accent-dim);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* Dataset */
+  .dataset-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.75rem;
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .dataset-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dataset-num {
+    font-family: var(--mono);
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .dataset-desc {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 160px;
+    line-height: 1.5;
+  }
+
+  .dataset-detail {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.8;
+    width: 100%;
+  }
+
+  /* Tech stack */
+  .tech-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tech-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 0.35rem 0.8rem;
+    border-radius: 5px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    background: var(--bg2);
+    letter-spacing: 0.03em;
+  }
+
+  .tech-tag.highlight {
+    border-color: rgba(59,158,255,0.3);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  /* Team */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+
+  .team-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  .team-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    margin: 0 auto 0.75rem;
+  }
+
+  .team-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .team-role {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  .team-card.mentor {
+    border-color: rgba(0,212,170,0.2);
+    background: var(--accent2-dim);
+  }
+
+  .team-card.mentor .team-avatar {
+    color: var(--accent2);
+    border-color: rgba(0,212,170,0.3);
+  }
+
+  /* Future goals */
+  .goals-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .goals-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .goal-dot {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent2);
+    margin-top: 9px;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .overview-grid { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr; }
+    .hero-meta { gap: 1.25rem; }
+    .nav-links { display: none; }
+    .dataset-box { flex-direction: column; gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">hrv-biomarker</span>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="results.html">Dashboard →</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Rutgers University Health Department &nbsp;·&nbsp; Jan – May 2026</div>
+      <h1>Biomarker Discovery &<br><span>Synthetic HRV Generation</span></h1>
+      <p class="hero-sub">A machine learning approach to identifying disease biomarkers in rare neurological disorders — trained on healthy patient data to establish a normative baseline applicable across conditions including ALS, Huntington's Disease, and Muscular Dystrophy.</p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Mentor</span>
+          <span class="meta-value">Dr. Daneault</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Dataset</span>
+          <span class="meta-value">NSR2DB — 54 patients</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Best model RMSE</span>
+          <span class="meta-value">30.29 ms (CNN)</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="results.html" class="btn btn-primary">View results dashboard</a>
+        <a href="https://github.com/fuzislit/hrv-biomarker-project" target="_blank" class="btn btn-outline">GitHub repo</a>
+        <a href="https://docs.google.com/presentation/d/1haIG59cB0vUrt7I6qe6d7fju6CtYSFUgJ4dcut1tq5M/edit?slide=id.g395a832d03f_1_1459#slide=id.g395a832d03f_1_1459" target="_blank" class="btn btn-outline">Presentation</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Overview -->
+  <section id="overview">
+    <div class="container">
+      <div class="section-label">Overview</div>
+      <h2>Why this project matters</h2>
+      <p class="section-intro">Rare neurological diseases like ALS and Huntington's are notoriously difficult to study — there simply isn't enough patient data to train robust models. We found a different path: build a normative baseline from healthy individuals, and use prediction error as the signal for disease.</p>
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="card-icon icon-blue">⚡</div>
+          <h3>The problem</h3>
+          <p>Rare disease datasets are scarce. Traditional supervised ML approaches fail when you have fewer than a few dozen patients with labeled progression data.</p>
+        </div>
+        <div class="overview-card">
+          <div class="card-icon icon-teal">🧬</div>
+          <h3>Our approach</h3>
+          <p>Train exclusively on healthy ECG data to learn what "normal" looks like. When unhealthy data is fed in, the model's prediction errors flag disease progression.</p>
+        </div>
+        <div class="overview-card">
+          <div class="card-icon icon-blue">📊</div>
+          <h3>Synthetic data</h3>
+          <p>We generate synthetic HRV signals that closely mirror real healthy patient patterns — expanding the training pool without requiring more patients.</p>
+        </div>
+        <div class="overview-card">
+          <div class="card-icon icon-teal">🎯</div>
+          <h3>Target disorders</h3>
+          <p>Any rare neurological disorder — including ALS, Huntington's Disease, and Muscular Dystrophy — where early biomarker detection could transform patient outcomes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- How it works -->
+  <section id="how-it-works">
+    <div class="container">
+      <div class="section-label">Methodology</div>
+      <h2>How it works</h2>
+      <p class="section-intro">A four-stage pipeline from raw ECG signal to synthetic HRV generation.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>Extract RR intervals</h3>
+            <p>RR interval data is extracted from ECG signals of 54 healthy individuals using the NSR2DB dataset — digitized at 128 Hz with manual beat annotation review.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>Train CNN and LSTM models</h3>
+            <p>Both a Convolutional Neural Network and Long Short-Term Memory model are trained to predict the next heartbeat interval from a sliding window of 50 prior RR intervals.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>Cross-validate to reduce overfitting</h3>
+            <p>Leave-One-Out Cross-Validation (LOOCV) and K-Fold validation ensure the models generalize across patients, not just the training set.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h3>Generate synthetic HRV data</h3>
+            <p>The trained models generate synthetic HRV sequences that closely mirror real patient patterns — establishing the healthy baseline used for future disease detection.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Results -->
+  <section id="results">
+    <div class="container">
+      <div class="section-label">Results</div>
+      <h2>Model performance</h2>
+      <p class="section-intro">Both models were evaluated on mean RMSE across all patients. Lower is better — the CNN delivered significantly more consistent predictions.</p>
+      <div class="results-grid">
+        <div class="metric-card winner">
+          <div class="metric-model">CNN</div>
+          <div class="metric-val good">30.29 ms</div>
+          <div class="metric-sub">Mean RMSE</div>
+          <div class="metric-mae">Mean MAE: <span>18.54 ms</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-model">LSTM</div>
+          <div class="metric-val bad">137.82 ms</div>
+          <div class="metric-sub">Mean RMSE</div>
+          <div class="metric-mae">Mean MAE: <span>—</span></div>
+        </div>
+      </div>
+      <div class="result-note">
+        The CNN outperformed the LSTM with more consistent and stable predictions across patients — achieving 4.5× lower RMSE. This makes the CNN the stronger baseline model for future disease detection work.
+      </div>
+      <div style="margin-top: 1.5rem;">
+        <a href="results.html" class="btn btn-outline">View full results dashboard →</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Dataset -->
+  <section id="dataset">
+    <div class="container">
+      <div class="section-label">Dataset</div>
+      <h2>Normal Sinus Rhythm RR Interval Database</h2>
+      <p class="section-intro">All models were trained exclusively on healthy patient data from the NSR2DB — a gold-standard dataset for cardiac rhythm research.</p>
+      <div class="dataset-box">
+        <div class="dataset-stat">
+          <span class="dataset-num">54</span>
+          <span class="dataset-desc">long-term ECG recordings from healthy individuals</span>
+        </div>
+        <div class="dataset-stat">
+          <span class="dataset-num">128</span>
+          <span class="dataset-desc">Hz digitization rate with manual annotation review</span>
+        </div>
+        <div class="dataset-stat">
+          <span class="dataset-num">50</span>
+          <span class="dataset-desc">RR interval sliding window for prediction</span>
+        </div>
+        <div class="dataset-detail">
+          Source: NSR2DB (Normal Sinus Rhythm RR Interval Database) &nbsp;·&nbsp; Healthy adults only &nbsp;·&nbsp; ECG beat annotations manually reviewed for accuracy
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Tech Stack -->
+  <section id="tech">
+    <div class="container">
+      <div class="section-label">Tech stack</div>
+      <h2>Built with</h2>
+      <div class="tech-grid" style="margin-bottom: 1rem;">
+        <span class="tech-tag highlight">Python</span>
+        <span class="tech-tag highlight">TensorFlow</span>
+        <span class="tech-tag highlight">CNN</span>
+        <span class="tech-tag highlight">LSTM</span>
+      </div>
+      <div class="tech-grid">
+        <span class="tech-tag">Scikit-learn</span>
+        <span class="tech-tag">NumPy</span>
+        <span class="tech-tag">Pandas</span>
+        <span class="tech-tag">SciPy</span>
+        <span class="tech-tag">Matplotlib</span>
+        <span class="tech-tag">Seaborn</span>
+        <span class="tech-tag">FastDTW</span>
+        <span class="tech-tag">Google Colab</span>
+        <span class="tech-tag">Amarel Supercomputer</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Team -->
+  <section id="team">
+    <div class="container">
+      <div class="section-label">Team</div>
+      <h2>The people behind it</h2>
+      <p class="section-intro">A multidisciplinary team from the Rutgers University Health Department, guided by Dr. Daneault.</p>
+      <div class="team-grid">
+        <div class="team-card mentor">
+          <div class="team-avatar">DD</div>
+          <div class="team-name">Dr. Daneault</div>
+          <div class="team-role">Mentor</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">FA</div>
+          <div class="team-name">Fuzail Ali</div>
+          <div class="team-role">Project Manager</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">PM</div>
+          <div class="team-name">Pablo Moreno</div>
+          <div class="team-role">Team Member</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">NS</div>
+          <div class="team-name">Nancy Shehata</div>
+          <div class="team-role">Team Member</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">ZI</div>
+          <div class="team-name">Zain Iqbal</div>
+          <div class="team-role">Team Member</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">EC</div>
+          <div class="team-name">Erick Cruz</div>
+          <div class="team-role">Team Member</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Future Goals -->
+  <section id="future">
+    <div class="container">
+      <div class="section-label">What's next</div>
+      <h2>Future goals</h2>
+      <ul class="goals-list">
+        <li><span class="goal-dot"></span>Acquire rare neurological disease datasets to test against the healthy baseline models</li>
+        <li><span class="goal-dot"></span>Reduce prediction error further using improved hardware and more training epochs</li>
+        <li><span class="goal-dot"></span>Expand synthetic data generation to support broader neurological disease progression research, including ALS</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    Rutgers University Health Department &nbsp;·&nbsp; Mentor: Dr. Daneault &nbsp;·&nbsp; Jan – May 2026 &nbsp;·&nbsp;
+    <a href="https://github.com/fuzislit/hrv-biomarker-project" target="_blank">GitHub</a> &nbsp;·&nbsp;
+    <a href="https://docs.google.com/presentation/d/1haIG59cB0vUrt7I6qe6d7fju6CtYSFUgJ4dcut1tq5M/edit?slide=id.g395a832d03f_1_1459#slide=id.g395a832d03f_1_1459" target="_blank">Presentation</a>
+  </div>
+</footer>
+
+</body>
+</html>
