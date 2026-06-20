@@ -298,6 +298,46 @@
 
   .back-link:hover { color: var(--accent); }
 
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(0,0,0,0.92);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    backdrop-filter: blur(6px);
+  }
+
+  .lightbox.active { display: flex; }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 88vh;
+    border-radius: 8px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+    object-fit: contain;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--muted);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .lightbox-close:hover { color: #fff; }
+
+  .gallery-img {
+    cursor: zoom-in;
+  }
+
   footer {
     border-top: 1px solid var(--border);
     padding: 2.5rem 0;
@@ -465,7 +505,29 @@
   </div>
 </footer>
 
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightboxClose">✕</span>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
 <script>
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+
+  document.querySelectorAll('.gallery-img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.add('active');
+    });
+  });
+
+  lightbox.addEventListener('click', () => lightbox.classList.remove('active'));
+  document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('active'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('active'); });
+
   const accent = '#3b9eff';
   const accent2 = '#00d4aa';
   const muted = '#7a8a9e';
