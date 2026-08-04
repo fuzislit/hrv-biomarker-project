@@ -4,6 +4,10 @@
 **Jan 2026 – May 2026**
 
 ## Overview
+
+🌐 **Project Website:** [View Project Overview & Results](fuzislit.github.io/hrv-biomarker-project/)
+
+
 This project develops a machine learning algorithm that generates synthetic physiological data to identify biomarkers of disease progression in rare neurological disorders such as ALS, Huntington's Disease, and Muscular Dystrophy.
 
 Due to the scarcity of rare disease data, we trained models exclusively on healthy patient data to establish a normative baseline. Any future unhealthy patient data fed into the model will produce prediction errors that can flag disease progression.
