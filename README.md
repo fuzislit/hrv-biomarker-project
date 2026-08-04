@@ -5,7 +5,7 @@
 
 ## Overview
 
-🌐 **Project Website:** [View Project Overview & Results](fuzislit.github.io/hrv-biomarker-project/)
+🔗 **Project Website:** [View Project Overview & Results](fuzislit.github.io/hrv-biomarker-project/)
 
 
 This project develops a machine learning algorithm that generates synthetic physiological data to identify biomarkers of disease progression in rare neurological disorders such as ALS, Huntington's Disease, and Muscular Dystrophy.
