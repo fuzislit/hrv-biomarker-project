@@ -1,49 +1,67 @@
 # Biomarker Discovery & Synthetic HRV Data Generation
 
-**Rutgers University | Mentor: Dr. Daneault**  
+**Rutgers University | Mentor: Dr. Daneault**
 **Jan 2026 – May 2026**
 
 ## Overview
 
-🔗 **Project Website:** [View Project Overview & Results](fuzislit.github.io/hrv-biomarker-project/)
+🔗 **Project Website:** [View Project Overview & Results](https://fuzislit.github.io/hrv-biomarker-project/)
 
+This research project explores machine learning approaches for generating synthetic heart rate variability (HRV) data and establishing healthy physiological baselines to support future research into rare neurological disorders, including ALS, Huntington's disease, and muscular dystrophy.
 
-This project develops a machine learning algorithm that generates synthetic physiological data to identify biomarkers of disease progression in rare neurological disorders such as ALS, Huntington's Disease, and Muscular Dystrophy.
+Using ECG-derived RR interval data from healthy individuals, we trained deep learning models to predict heartbeat intervals and evaluate how well they learned normal physiological patterns. The long-term goal is to investigate whether deviations from these baselines could help researchers identify potential indicators of disease progression.
 
-Due to the scarcity of rare disease data, we trained models exclusively on healthy patient data to establish a normative baseline. Any future unhealthy patient data fed into the model will produce prediction errors that can flag disease progression.
+## Data Processing & ETL
 
-## How It Works
-- Extracted RR interval data from ECG signals of healthy individuals
-- Trained CNN and LSTM models to predict the next heartbeat interval using a sliding window of 50 RR intervals
-- Used LOOCV and K-Fold cross-validation to reduce overfitting
-- Generated synthetic HRV data that closely mirrors real patient patterns
+* Extracted RR interval data from ECG recordings of 54 healthy individuals.
+* Processed physiological time-series data into sliding-window sequences of 50 consecutive RR intervals for model training.
+* Prepared model inputs and training datasets using Python, NumPy, and Pandas.
+* Developed a data preparation workflow to support model training, cross-validation, and performance evaluation.
+
+## Machine Learning & Model Evaluation
+
+* Developed CNN and LSTM models to predict the next RR interval from previous heartbeat measurements.
+* Applied Leave-One-Out Cross-Validation (LOOCV) and K-Fold cross-validation to evaluate model performance across patient recordings.
+* Evaluated prediction accuracy using Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE).
+* Generated synthetic HRV sequences to investigate how well the models reproduced patterns observed in healthy individuals.
 
 ## Results
-| Model | Mean RMSE | Mean MAE |
-|-------|-----------|----------|
-| CNN   | 30.29 ms  | 18.54 ms |
-| LSTM  | 137.82 ms | —        |
 
-CNN outperformed LSTM with more consistent and stable predictions across patients.
+| Model | Mean RMSE | Mean MAE |
+| ----- | --------: | -------: |
+| CNN   |  30.29 ms | 18.54 ms |
+| LSTM  | 137.82 ms |        — |
+
+The CNN achieved lower prediction error than the LSTM in the reported evaluation, demonstrating more accurate RR interval predictions on the evaluated data.
 
 ## Dataset
+
 **Normal Sinus Rhythm RR Interval Database (NSR2DB)**
-- 54 long-term ECG recordings from healthy individuals
-- ECG digitized at 128 Hz with manual beat annotation review
+
+* 54 long-term ECG recordings from healthy individuals.
+* ECG recordings digitized at 128 Hz with manual beat annotation review.
 
 ## Tech Stack
-- **Language:** Python
-- **ML Models:** CNN, LSTM
-- **Libraries:** TensorFlow, Scikit-learn, NumPy, Pandas, SciPy, Matplotlib, Seaborn, FastDTW
-- **Environment:** Google Colab, Amarel Supercomputer
+
+* **Language:** Python
+* **Data Processing:** Pandas, NumPy, SciPy
+* **Machine Learning:** TensorFlow, Scikit-learn
+* **Models:** Convolutional Neural Networks (CNN), Long Short-Term Memory Networks (LSTM)
+* **Visualization:** Matplotlib, Seaborn
+* **Environment:** Google Colab, Amarel Supercomputer
 
 ## Team
-Fuzail Ali(Project Manager), Pablo Moreno, Nancy Shehata, Zain Iqbal, Erick Cruz  
-Mentor: Dr. Daneault
 
-## Future Goals
-- Acquire rare neurological disease datasets to test against healthy baseline models
-- Reduce prediction error further using improved hardware and more training epochs
-- Expand synthetic data generation to support ALS progression research
-  ## Presentation
+**Project Manager:** Fuzail Ali
+**Team Members:** Pablo Moreno, Nancy Shehata, Zain Iqbal, Erick Cruz
+**Mentor:** Dr. Daneault
+
+## Future Work
+
+* Evaluate model performance using datasets containing rare neurological disease cases.
+* Investigate whether prediction errors distinguish healthy physiological patterns from disease-associated patterns.
+* Explore model improvements and additional synthetic data generation techniques.
+
+## Presentation
+
 [View Full Project Presentation](https://docs.google.com/presentation/d/1haIG59cB0vUrt7I6qe6d7fju6CtYSFUgJ4dcut1tq5M/edit?slide=id.g395a832d03f_1_1459#slide=id.g395a832d03f_1_1459)
